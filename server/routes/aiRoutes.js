@@ -12,4 +12,6 @@ aiRouter.post('/generate-image', auth, generateImage);
 aiRouter.post('/remove-image-background',upload.single('image') ,auth, removeImageBackground);
 aiRouter.post('/remove-image-object',upload.single('image') ,auth, removeImageObject);
 aiRouter.post('/resume-review',upload.single('resume') ,auth, resumeReview);
+// alias to support alternative route name used by some frontends
+aiRouter.post('/review-resume', upload.single('resume'), auth, resumeReview);
 export default aiRouter

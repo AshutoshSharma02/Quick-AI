@@ -1,43 +1,41 @@
-import express from 'express';
-import cors from 'cors';
-import 'dotenv/config';
-import { clerkMiddleware, requireAuth } from '@clerk/express'
-import aiRouter from './routes/aiRoutes.js';
-import connectCloudinary from './configs/cloudinary.js';
-import userRouter from './routes/userRoutes.js';
+import express from 'express'
+import cors from 'cors'
+import 'dotenv/config'
+
+import { clerkMiddleware } from '@clerk/express'
+import aiRouter from './routes/aiRoutes.js'
+import userRouter from './routes/userRoutes.js'
+import connectCloudinary from './configs/cloudinary.js'
 
 const app = express()
+
 await connectCloudinary()
 
-// Middleware order is important
-app.use(cors())
-app.options('*', cors())
-// Bypass auth for CORS preflight on API routes
-app.use('/api', (req, res, next) => {
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(204);
-    }
-    next();
-});
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
+
 app.use(express.json())
 
-// Clerk middleware must be before routes
 app.use(clerkMiddleware())
 
-// Root route for health check
-app.get('/', (req, res)=>{
-    res.send('Server is Live!')
-}) 
+app.get('/', (req, res) => {
+  res.send('Server is Live!')
+})
 
-// API routes - route-specific auth is applied within routers
 app.use('/api/ai', aiRouter)
 app.use('/api/user', userRouter)
 
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.originalUrl}`
+  })
+})
 
-// Catch-all route for 404
+const PORT = 3000
 
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{
-    console.log('Server is running on port', PORT);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`)
 })

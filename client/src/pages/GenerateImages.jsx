@@ -4,8 +4,7 @@ import { Image, Sparkles } from 'lucide-react'
 import { useAuth } from '@clerk/clerk-react'
 import toast from 'react-hot-toast'
 
-// Configure axios base URL
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
+// axios baseURL is centralized in src/main.jsx
 
 // Constants
 const IMAGE_STYLES = [

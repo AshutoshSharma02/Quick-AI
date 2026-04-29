@@ -1,10 +1,9 @@
 import { Sparkles, Edit } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import Markdown from 'react-markdown';
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const WriteArticle = () => {
   const articleLength = [
@@ -19,27 +18,49 @@ const WriteArticle = () => {
   const [content,setContent] = useState('')
   const {getToken} = useAuth()
 
+  useEffect(() => {
+    console.log('WriteArticle mounted')
+  }, [])
+
 
 
   const onSubmitHandler = async (e) => {
     e.preventDefault()
+    console.log('WriteArticle: onSubmit')
+    setLoading(true)
     try {
-      setLoading(true)
-      const prompt = `Write an article about ${input} in ${selectedLength.text}`
-      const {data} = await axios.post('/api/ai/generate-article',{prompt,length:selectedLength.length},{
-        headers:{Authorization: `Bearer ${await getToken()}`}
-      })
-      if(data.success){
-        setContent(data.content)
-
-      }else{
-        toast.error(data.message)
+      if (!input || !input.trim()) {
+        toast.error('Please enter a topic')
+        return
       }
-      
+
+      const prompt = `Write an article about ${input} in ${selectedLength.text}`
+
+      let token
+      try {
+        token = await getToken()
+      } catch (err) {
+        toast.error('Authentication required')
+        return
+      }
+
+      const {data} = await axios.post(
+        '/api/ai/generate-article',
+        {prompt, length: selectedLength.length},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      if (data?.success) {
+        setContent(data.content)
+      } else {
+        toast.error(data?.message || 'Failed to generate article')
+      }
     } catch (error) {
-      toast.error(error.message)
+      console.error('WriteArticle error', error)
+      toast.error(error.response?.data?.message || error.message)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
@@ -77,7 +98,7 @@ const WriteArticle = () => {
           ))}
         </div>
         <br />
-        <button disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
+        <button type='submit' disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
           {
             loading?<span className='w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin'></span>
             :<Edit className='w-5' />

@@ -8,7 +8,20 @@ import { SignIn,useUser } from '@clerk/clerk-react'
 const Layout = () => {
   const navigate = useNavigate()
   const [sidebar,setSidebar]  = useState(false);
-  const {user} = useUser();
+    const { isLoaded, isSignedIn, user } = useUser();
+  
+    // avoid blocking render while Clerk initializes
+    if (!isLoaded) {
+      return <div className='flex items-center justify-center h-screen'>Loading...</div>
+    }
+  
+    if (!isSignedIn) {
+      return (
+        <div className='flex items-center justify-center h-screen'>
+          <SignIn />
+        </div>
+      )
+    }
   return user?(
     <div className='flex flex-col items-start justify-start h-screen' >
         <nav className='w-full px-8 min-h-14 flex items-center justify-between
