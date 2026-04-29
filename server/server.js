@@ -11,8 +11,20 @@ const app = express()
 
 await connectCloudinary()
 
+// ✅ FIXED CORS (IMPORTANT)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://quick-ai-chi-eight.vercel.app'
+]
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true
 }))
 
@@ -37,5 +49,5 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
-  console.log("Server running")
+  console.log(`Server running on port ${PORT}`)
 })
