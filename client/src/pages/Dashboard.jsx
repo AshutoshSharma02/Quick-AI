@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Gem, Sparkles } from 'lucide-react'
 import { Protect, useAuth } from '@clerk/clerk-react'
 import CreationItem from '../components/CreationItem'
-import axios from 'axios'
+import api from '@/utils/api'
 import toast from 'react-hot-toast'
 
-// axios baseURL is centralized in src/main.jsx
+// API baseURL is centralized in src/utils/api.js
 
 const Dashboard = () => {
   const [creations,setcreations] =useState([])
@@ -14,7 +14,7 @@ const Dashboard = () => {
 
   const getDashboardData = async()=>{
     try {
-      const {data} = await axios.get('/api/user/get-user-creations',{
+      const {data} = await api.get('/api/user/get-user-creations',{
         headers:{Authorization: `Bearer ${await getToken()}`}
       })
       if(data.success){

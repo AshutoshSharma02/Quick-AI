@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useAuth, useUser } from '@clerk/clerk-react'
 
 import { Heart } from 'lucide-react'
-import axios from 'axios'
+import api from '@/utils/api'
 import toast from 'react-hot-toast'
 
-// axios baseURL is centralized in src/main.jsx
+// API baseURL is centralized in src/utils/api.js
 
 const Community = () => {
   const [creations, setCreations] = useState([])
@@ -15,7 +15,7 @@ const Community = () => {
 
   const fetchCreations = async () => {
    try {
-    const {data} = await axios.get('/api/user/get-published-creations',{
+    const {data} = await api.get('/api/user/get-published-creations',{
       headers:{Authorization:`Bearer ${await getToken()}`}
 
     })
@@ -34,7 +34,7 @@ const Community = () => {
   }
    const imageLikeToggle = async(id)=>{
      try {
-       const {data} = await axios.post('/api/user/toggle-like-creations',{id},{
+      const {data} = await api.post('/api/user/toggle-like-creations',{id},{
          headers:{Authorization:`Bearer ${await getToken()}`}
        })
  

@@ -1,11 +1,11 @@
 import { Eraser, Sparkles } from 'lucide-react'
 import React from 'react'
 import { useState } from 'react'
-import axios from 'axios'
 import { useAuth } from '@clerk/clerk-react'
 import toast from 'react-hot-toast'
+import api from '@/utils/api'
 
-// axios baseURL is centralized in src/main.jsx
+// API baseURL is centralized in src/utils/api.js
 
 const RemoveBackground = () => {
   const [input, setInput] = useState('')
@@ -22,7 +22,7 @@ const RemoveBackground = () => {
       const formData = new FormData()
       formData.append('image', input)
       
-      const { data } = await axios.post(
+      const { data } = await api.post(
         '/api/ai/remove-image-background',
         formData,
         {

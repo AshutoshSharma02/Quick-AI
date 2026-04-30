@@ -1,6 +1,6 @@
 import { Sparkles, Edit } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '@/utils/api'
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import Markdown from 'react-markdown';
@@ -44,7 +44,7 @@ const WriteArticle = () => {
         return
       }
 
-      const {data} = await axios.post(
+      const {data} = await api.post(
         '/api/ai/generate-article',
         {prompt, length: selectedLength.length},
         { headers: { Authorization: `Bearer ${token}` } }

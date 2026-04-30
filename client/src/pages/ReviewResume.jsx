@@ -1,6 +1,6 @@
 import { FileText, Sparkles } from 'lucide-react'
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '@/utils/api'
 import { useAuth } from '@clerk/clerk-react'
 import toast from 'react-hot-toast'
 import Markdown from 'react-markdown'
@@ -33,7 +33,7 @@ const ReviewResume = () => {
         return
       }
 
-      const { data } = await axios.post(
+      const { data } = await api.post(
         '/api/ai/resume-review',
         formData,
         { headers: { Authorization: `Bearer ${token}` } }

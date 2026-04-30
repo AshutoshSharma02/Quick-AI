@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '@/utils/api'
 import { Image, Sparkles } from 'lucide-react'
 import { useAuth } from '@clerk/clerk-react'
 import toast from 'react-hot-toast'
 
-// axios baseURL is centralized in src/main.jsx
+// API baseURL is centralized in src/utils/api.js
 
 // Constants
 const IMAGE_STYLES = [
@@ -49,7 +49,7 @@ const GenerateImages = () => {
       setLoading(true)
       const prompt = `Generate an image of ${input} in the style ${selectedStyle}`
       
-      const { data } = await axios.post(
+      const { data } = await api.post(
         '/api/ai/generate-image',
         { prompt, publish },
         {

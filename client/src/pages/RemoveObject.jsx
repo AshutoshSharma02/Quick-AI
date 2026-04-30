@@ -1,10 +1,10 @@
 import { Scissors, Sparkles } from 'lucide-react'
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '@/utils/api'
 import { useAuth } from '@clerk/clerk-react'
 import toast from 'react-hot-toast'
 
-// axios baseURL is centralized in src/main.jsx
+// API baseURL is centralized in src/utils/api.js
 
 const RemoveObject = () => {
   const [input, setInput] = useState('')
@@ -26,7 +26,7 @@ const RemoveObject = () => {
       formData.append('image', input)
       formData.append('object', object)
       
-      const { data } = await axios.post(
+      const { data } = await api.post(
         '/api/ai/remove-image-object',
         formData,
         {

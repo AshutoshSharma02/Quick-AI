@@ -3,7 +3,7 @@ import { Hash, Sparkles } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import Markdown from 'react-markdown'
-import axios from 'axios'
+import api from '@/utils/api'
 
 const BlogTitles = () => {
   const blogCategories = [
@@ -42,7 +42,7 @@ const BlogTitles = () => {
         return
       }
 
-      const { data } = await axios.post(
+      const { data } = await api.post(
         '/api/ai/generate-blog-title',
         { prompt },
         { headers: { Authorization: `Bearer ${token}` } }
